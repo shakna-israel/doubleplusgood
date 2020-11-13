@@ -191,6 +191,10 @@ This is an integer value used by the template engine's cache. It is set to a rea
 
 Clears the template engine's cache, and calls Lua's garbage collector.
 
+### template.version
+
+A string representing the version of `doubleplusgood` in use.
+
 ## Adler Hash
 
 Once all macros are expanded, we enter the evaluation phase of the expanded Lua file.

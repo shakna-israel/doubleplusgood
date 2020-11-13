@@ -10,6 +10,8 @@
 // Ours
 #include <template.h>
 
+#define DOUBLE_PLUS_GOOD_VERSION "1.0.0"
+
 uint32_t adler32(const char* key, size_t length) {
 	uint32_t sa = 1;
 	uint32_t sb = 0;
@@ -50,6 +52,12 @@ int main(int argc, char* argv[]) {
 	lua_setglobal(L, "template");
 	luaL_dostring(L, "return load(template)()");
 	lua_setglobal(L, "template");
+
+	// Set our version in the library
+	lua_getglobal(L, "template");
+	lua_pushstring(L, "version");
+	lua_pushstring(L, DOUBLE_PLUS_GOOD_VERSION);
+	lua_settable(L, -3);
 
 	int expand_mode = 0;
 	int argc_offset = 1;
