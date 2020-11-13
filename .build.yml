@@ -7,6 +7,6 @@ sources:
   - https://git.sr.ht/~shakna/doublegoodplus
 tasks:
   - test: |
-     cd luaj
+     cd doublegoodplus
      lua5.3 -v
      make -j $(nproc --all) test
