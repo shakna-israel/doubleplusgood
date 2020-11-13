@@ -7,6 +7,71 @@ assert(adler32(10) == nil)
 assert(adler32({}) == nil)
 assert(adler32(10.2) == nil)
 
--- TODO: Test template library
+-- Test template library
 
--- TODO: Test expansions
+-- Test template.render without model...
+do
+	local program = [[
+	{% for k, v in ipairs({1, 2, 3}) do %}
+		{{k}} {{v}}
+	{% end %}
+	]]
+
+	-- Note: This is a little fragile, because we're comparing whitespace...
+	local expect = [[ 	 
+		1  1 
+	 
+		2  2 
+	 
+		3  3 
+	 
+	]]
+	local expect_hash = 1187120022
+
+	assert(template.render(program) == expect)
+	assert(adler32(template.render(program)) == expect_hash)
+end
+
+-- TODO: Test template.render with model...
+-- Test template.renderfile without model...
+-- Test template.renderfile with model...
+
+-- Test this file expands correctly...
+
+-- String expansion...
+{%
+	local macro_value = format("%q", "Hello, World!")
+%}
+assert({{macro_value}} == "Hello, World!")
+
+-- Number expansion...
+{%
+	local macro_value = format("%q", 10)
+%}
+assert({{macro_value}} == 10)
+
+-- Test a simple for loop...
+{%
+	local values = {1, 2, 3}
+%}
+
+assert({{#values}} == 3)
+
+{% for i = 1, #values do %}
+	assert({{values[i]}} == {{i}})
+{% end %}
+
+-- Table expansion
+{%
+	local values = {1, 2, 3}
+%}
+
+local vals = {}
+{% for i = 1, #values do %}
+	vals[{{i}}] = {{values[i]}}
+{% end %}
+
+assert(#vals == 3)
+for i = 1, #vals do
+	assert(vals[i] == i)
+end
