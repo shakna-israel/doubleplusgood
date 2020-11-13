@@ -111,7 +111,7 @@ However, the engine does _not_ come with the full power of Lua. Though it could,
 
 The environment that the preprocessor uses is absolutely Lua. You can use infinite while loops and so on, if you're insane.
 
-However, it intentionally limits what functions you have available to a bare handful, so that you aren't tempted to construct overly difficult code:
+However, it intentionally limits what functions you have available to a bare handful, so that you aren't tempted to construct overly difficult-to-understand code:
 
 + ipairs
 
@@ -134,6 +134,8 @@ However, it intentionally limits what functions you have available to a bare han
 	+ If the model is supplied (a table), then the limited environment is copied into the model, and then the file is preprocessed and returned.
 
 Within the limited environment, `_G` will always point to the `model`.
+
+This, of course, does _not_ prevent you from creating your own data structures, functions, and so on, to use within the macro preprocessor, and we don't want to discourage that - If making a function makes things clearer or simpler, do so.
 
 ---
 
