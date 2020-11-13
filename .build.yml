@@ -1,6 +1,7 @@
 image: alpine/edge
 packages:
   - lua5.3
+  - lua5.3-dev
   - xxd
   - make
 sources:
