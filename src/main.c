@@ -10,7 +10,7 @@
 // Ours
 #include <template.h>
 
-#define DOUBLE_PLUS_GOOD_VERSION "1.0.1"
+#define DOUBLE_PLUS_GOOD_VERSION "1.1.0"
 
 uint32_t adler32(const char* key, size_t length) {
 	uint32_t sa = 1;

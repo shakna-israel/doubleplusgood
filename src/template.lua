@@ -141,13 +141,18 @@ local inner_render = function(rawdata, model)
 end
 
 expose['render'] = function(rawdata, model)
-
-  -- TODO: Convert escapes here...
+  -- Convert escapes here...
+  rawdata = (string.gsub(rawdata, "\\(.)", function(x)
+    return string.format("\\%03d", string.byte(x))
+  end))
 
   local status, ret = pcall(inner_render, rawdata, model)
   if status then
 
-    -- TODO: Unescape here...
+    -- Unescape here...
+    ret = (string.gsub(ret, "\\(%d%d%d)", function(d)
+      return string.char(tonumber(d))
+    end))
 
     return ret
   else

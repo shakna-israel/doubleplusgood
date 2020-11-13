@@ -73,6 +73,8 @@ The basic syntax of the preprocessor is extremely simple.
 
 + Things inside `{{` and `}}` get replaced via a call to tostring.
 
++ Escaping: Like in Lua, the macro engine will escape on `\`. However, it does this at macro expansion. Which means if you want it during the Lua evaluation time, you'll probably need to double escape.
+
 + Like Lua, the engine is whitespace agnostic.
 
 ---
