@@ -1,0 +1,12 @@
+image: alpine/edge
+packages:
+  - lua5.3
+  - xxd
+  - make
+sources:
+  - https://git.sr.ht/~shakna/doublegoodplus
+tasks:
+  - test: |
+     cd luaj
+     lua5.3 -v
+     make -j $(nproc --all) test

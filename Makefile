@@ -6,6 +6,10 @@ PREFIX=/usr/local/bin/
 all: template.h
 	$(CC) -g $(LIBLUA) $(INCLUDES) src/main.c -o $(OUTNAME)
 
+.PHONY: test
+test: all
+	./$(OUTNAME) test.lua
+
 .PHONY: install
 install: all
 	install $(OUTNAME) $(PREFIX)
