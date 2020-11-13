@@ -229,6 +229,12 @@ Run: `make`
 
 Run: `make install`
 
+### Testing
+
+[![builds.sr.ht status](https://builds.sr.ht/~shakna/doublegoodplus.svg)](https://builds.sr.ht/~shakna/doublegoodplus?)
+
+Run: `make test`
+
 ---
 
 # License
