@@ -1,3 +1,7 @@
+// stdlib
+#include <stdint.h>
+#include <string.h>
+
 // Vendor
 #include <lua.h>
 #include <lauxlib.h>
@@ -47,10 +51,21 @@ int main(int argc, char* argv[]) {
 	luaL_dostring(L, "return load(template)()");
 	lua_setglobal(L, "template");
 
+	int expand_mode = 0;
+	int argc_offset = 1;
+	if(argc > 2) {
+		if(strcmp(argv[1], "-E") == 0 ||
+			strcmp(argv[1], "--expand") == 0)
+		{
+			argc_offset = 2;
+			expand_mode = 1;
+		}
+	}
+
 	// Build the arg library...
 	lua_createtable(L, 0, 0);
 	for(int i = 0; i < argc; i++) {
-		lua_pushnumber(L, i - 1);
+		lua_pushnumber(L, i - argc_offset);
 		lua_pushstring(L, argv[i]);
 		lua_settable(L, -3);
 	}
@@ -65,6 +80,13 @@ int main(int argc, char* argv[]) {
 
 	size_t length = 0;
 	const char* value = lua_tolstring(L, -1, &length);
+
+	// Are we just expanding?
+	if(expand_mode) {
+		printf("%s\n", value);
+		lua_close(L);
+		return 0;
+	}
 
 	lua_getglobal(L, "load");
 	lua_pushlstring(L, value, length);

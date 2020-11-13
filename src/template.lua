@@ -24,10 +24,10 @@ local lex = function(str)
       r[#r + 1] = c
     elseif inside == 'string' then
       if c == '%' and r[#r] == '{' then
-        r[#r] = ']===]\n'
+        r[#r] = ']===];'
         inside = 'statement'
       elseif c == '{' and r[#r] == '{' then
-        r[#r] = ']===] .. _tostring('
+        r[#r] = ']===] .. __tostring('
         inside = 'value'
       else
         r[#r + 1] = c
@@ -42,7 +42,7 @@ local lex = function(str)
       end
     elseif inside == 'value' then
       if c == '}' and r[#r] == '}' then
-        r[#r] = ')\n'
+        r[#r] = ');'
         inside = 'string'
         r[#r + 1] = 's[#s + 1] = [===[ '
       else
@@ -51,9 +51,9 @@ local lex = function(str)
     end
   end
   if inside == 'string' then
-    r[#r + 1] = ']===]\n'
+    r[#r + 1] = ']===];'
   end
-  r[#r + 1] = 'return _concat(s, "")'
+  r[#r + 1] = 'return __concat(s, "")'
 
   return table.concat(r, '')
 end
@@ -78,8 +78,16 @@ end
 local inner_render = function(rawdata, model)
   -- Set up model minimal requirements.
   if not model then model = {} end
-  model['_tostring'] = tostring
-  model['_concat'] = table.concat
+
+  -- TODO: We should be able to generate a unique name,
+  -- to pass to lex. Because we have the model.
+  model['__tostring'] = tostring
+
+  -- TODO: We should be able to generate a unique name,
+  -- to pass to lex. Because we have the model.
+  model['__concat'] = table.concat
+
+
   model['pairs'] = pairs
   model['ipairs'] = ipairs
   model['next'] = next

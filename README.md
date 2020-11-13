@@ -17,19 +17,121 @@ As you can see, the macro engine is itself written using Lua, instead of somethi
 
 ---
 
+## Running
+
+	doubleplusgood luafile args...
+
+The basic way to run against a file. The `arg` table will be constructed, where `arg[0]` is the Lua file being expanded.
+
+However, as we're dealing with macros, you may sometimes wish to see the expanded file. To do that, the _first_ argument should be `-E` or `--expand`:
+
+	doubleplusgood --expand luafile args...
+
+---
+
 ## Macro Engine
 
-TODO: Details on the constraints and syntax of the macro engine.
+### Preprocessor Type: Text
 
-Lua code but turning things "inside out".
+There are generally two types of macro preprocessors.
 
-Most things get converted to a string.
+The first kind is a simple text-replacement engine. (ala C-preprocessor).
 
-+ Strings are using `[===[` and `]===]` as the outer symbols. So avoid those.
+The second operates against tokens that are syntactically valid. (ala Lisp).
 
-+ Things inside `{%` and `%}` get treated as a Lua statement.
+This is the former. (C-like).
 
-+ Things inside `{{` and `}}` get placed inside tostring.
+---
+
+### Syntax Overview
+
+The basic syntax of the preprocessor is extremely simple.
+
++ WARNING: String interning uses `[===[` and `]===]` as the outer symbols. So using these may break the template engine. (This is intended to be fixed in the future, but is low priority).
+
++ WARNING: The engine uses a few functions beginning with `__`, so those are banned. (This is intended to be fixed in the futre, but is low priority).
+
++ Things inside `{%` and `%}` get treated as a raw Lua statement.
+
++ Things inside `{{` and `}}` get replaced via a call to tostring.
+
++ Like Lua, the engine is whitespace agnostic.
+
+---
+
+### Capabilities
+
+Unlike the C-preprocessor, we can do a hell of a lot more than simple text & replace.
+
+For example, you might want to do something with some repetition:
+
+	{%
+		local values = {
+			a = 21,
+			b = 7,
+			c = 2,
+			d = 41 }
+	%}
+
+	{% for k, v in pairs(values) do %}
+	local {{k}} = {{v}}
+	{% end %}
+
+	-- TODO: Other code here...
+
+	{% for k, v in pairs(values) do %}
+	print({{k}})
+	{% end %}
+
+This code creates a new local for each key in `values`, and then later prints it. The code expands to:
+
+	local b  = 7 
+	 
+	local c  = 2 
+	 
+	local d  = 41 
+	 
+	local a  = 21 
+	 
+
+	 
+	print(b )
+	 
+	print(c )
+	 
+	print(d )
+	 
+	print(a )
+
+The usual caveats about ordering and `pairs` apply, because we are just running some Lua code to produce our macro expansion.
+
+However, the engine does _not_ come with the full power of Lua. Though it could, this artificial limitation is done on purpose to contrain the engine and not tempt the programmer to make a hash of things.
+
+#### Limited Environment
+
+The environment that the preprocessor uses is absolutely Lua. You can use infinite while loops and so on, if you're insane.
+
+However, it intentionally limits what functions you have available to a bare handful, so that you aren't tempted to construct overly difficult code:
+
++ ipairs
+
++ pairs
+
++ next
+
++ type
+
++ format (from the `string` library)
+
++ include
+
+	+ include(filename, [model]) -> string
+
+	+ This function allows you to inject the results of another file, after macro preprocessing.
+
+	+ If the model is not supplied, runs within the environment of the current file being preprocessed.
+
+	+ If the model is supplied (a table), then the limited environment is copied into the model, and then the file is preprocessed and returned.
 
 ---
 
