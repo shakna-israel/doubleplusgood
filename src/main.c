@@ -34,7 +34,7 @@ int LuaAdler32(lua_State* L) {
 	const char* str = lua_tolstring(L, -1, &length);
 
 	uint32_t ret = adler32(str, length);
-	lua_pushnumber(L, ret);
+	lua_pushinteger(L, ret);
 	return 1;
 }
 
