@@ -1,9 +1,9 @@
-image: alpine/edge
+image: debian
 packages:
   - lua5.3
   - lua5.3-dev
   - xxd
-  - make
+  - build-essential
 sources:
   - https://git.sr.ht/~shakna/doublegoodplus
 tasks:
