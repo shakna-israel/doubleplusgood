@@ -133,6 +133,8 @@ However, it intentionally limits what functions you have available to a bare han
 
 	+ If the model is supplied (a table), then the limited environment is copied into the model, and then the file is preprocessed and returned.
 
+Within the limited environment, `_G` will always point to the `model`.
+
 ---
 
 ## Building

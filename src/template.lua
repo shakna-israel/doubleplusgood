@@ -87,15 +87,20 @@ local inner_render = function(rawdata, model)
   -- to pass to lex. Because we have the model.
   model['__concat'] = table.concat
 
-
+  -- Basics for surviving...
   model['pairs'] = pairs
   model['ipairs'] = ipairs
   model['next'] = next
   model['type'] = type
   model['format'] = string.format
+
+  -- Ability to grab other template renders...
   model['include'] = function(filename, m)
     return expose['renderfile'](filename, m or model)
   end
+
+  -- Self-reference
+  model['_G'] = model
   
   -- This is a "good enough" hash, exposed by our C interface.
   local hash = adler32(rawdata)
