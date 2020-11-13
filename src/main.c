@@ -74,6 +74,12 @@ int main(int argc, char* argv[]) {
 	if(luaL_dostring(L, "return template.renderfile(arg[0])")) {
 		// Error
 		fprintf(stderr, "%s\n", lua_tostring(L, -1));
+
+		// Try and get more traceback info...
+		if(!luaL_dostring(L, "return debug.traceback()")) {
+			fprintf(stderr, "%s\n", lua_tostring(L, -1));
+		}
+
 		lua_close(L);
 		return 1;
 	}
@@ -93,6 +99,12 @@ int main(int argc, char* argv[]) {
 	if(lua_pcall(L, 1, LUA_MULTRET, 0) != LUA_OK) {
 		// Error
 		fprintf(stderr, "%s\n", lua_tostring(L, -1));
+
+		// Try and get more traceback info...
+		if(!luaL_dostring(L, "return debug.traceback()")) {
+			fprintf(stderr, "%s\n", lua_tostring(L, -1));
+		}
+
 		lua_close(L);
 		return 1;
 	}
@@ -100,6 +112,12 @@ int main(int argc, char* argv[]) {
 	if(lua_type(L, -1) != LUA_TFUNCTION) {
 		// Error
 		fprintf(stderr, "%s\n", lua_tostring(L, -1));
+
+		// Try and get more traceback info...
+		if(!luaL_dostring(L, "return debug.traceback()")) {
+			fprintf(stderr, "%s\n", lua_tostring(L, -1));
+		}
+
 		lua_close(L);
 		return 1;
 	}
@@ -107,6 +125,12 @@ int main(int argc, char* argv[]) {
 	if(lua_pcall(L, 0, LUA_MULTRET, 0) != LUA_OK) {
 		// Error
 		fprintf(stderr, "%s\n", lua_tostring(L, -1));
+
+		// Try and get more traceback info...
+		if(!luaL_dostring(L, "return debug.traceback()")) {
+			fprintf(stderr, "%s\n", lua_tostring(L, -1));
+		}
+		
 		lua_close(L);
 		return 1;
 	}

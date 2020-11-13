@@ -27,6 +27,24 @@ However, as we're dealing with macros, you may sometimes wish to see the expande
 
 	doubleplusgood --expand luafile args...
 
+### Running Order
+
+When a file is called by doubleplusgood, it:
+
++ Assembles the argument table, `arg`.
+
++ Creates the `template` library and the `adler32` function.
+
++ Checks if you're just trying to expand the given file.
+
++ Renders the file using the template engine, including any `include`s.
+
+	+ If an error happens at any point in this process, it bails out.
+
++ Loads the resulting source code.
+
+	+ If an error happens at any point in this process, it bails out.
+
 ---
 
 ## Macro Engine
@@ -49,7 +67,7 @@ The basic syntax of the preprocessor is extremely simple.
 
 + WARNING: String interning uses `[===[` and `]===]` as the outer symbols. So using these may break the template engine. (This is intended to be fixed in the future, but is low priority).
 
-+ WARNING: The engine uses a few functions beginning with `__`, so those are banned. (This is intended to be fixed in the futre, but is low priority).
++ WARNING: The engine uses a few functions beginning with `__`, so those are banned. (This is intended to be fixed in the future, but is low priority).
 
 + Things inside `{%` and `%}` get treated as a raw Lua statement.
 
@@ -172,6 +190,16 @@ This is an integer value used by the template engine's cache. It is set to a rea
 	template.clearcache()
 
 Clears the template engine's cache, and calls Lua's garbage collector.
+
+## Adler Hash
+
+Once all macros are expanded, we enter the evaluation phase of the expanded Lua file.
+
+An extra global function is made available to this Lua environment, used by the `template` library, called `adler32`.
+
+	adler32(string) -> integer
+
+This converts a given string to an integer using the 32-bit Adler checksum hash. This is a _non-cryptographic_ hash, but useful enough for some purposes.
 
 ---
 
