@@ -4,6 +4,7 @@ packages:
   - lua5.3-dev
   - xxd
   - build-essential
+  - pkg-config
 sources:
   - https://git.sr.ht/~shakna/doublegoodplus
 tasks:
