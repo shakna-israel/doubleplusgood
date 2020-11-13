@@ -159,9 +159,6 @@ expose['render'] = function(rawdata, model)
 end
 
 expose['renderfile'] = function(filename, model)
-
-  -- TODO: Check both path and include directory / path...
-
   local f = io.open(filename, 'rb')
   if f ~= nil then
     local rawdata = f:read("*all")

@@ -139,6 +139,42 @@ This, of course, does _not_ prevent you from creating your own data structures, 
 
 ---
 
+## Template Library
+
+Once all macros are expanded, we enter the evaluation phase of the expanded Lua file.
+
+An extra library is made available to this Lua environment, called `template` that allows you to use the macro expander.
+
+### template.renderfile
+
+	template.renderfile(filename, [model])
+
+This either `false` or the result of calling `template.render` against the contents of `filename`.
+
+### template.render
+
+	template.render(string, [model])
+
+This takes a given string, and expands it with either the given model, or the default model (see `Limited Environment`).
+
+If an error occurs, prints a message to stderr, and returns `false`.
+
+Otherwise, returns a `string`.
+
+This function also takes advantage of aggressive cacheing, using an Adler32 hash of `string` as the key to store a function that can be passed a model to get a result. This means cached values shouldn't generally result in stale values, but you may notice mild performance increases when making heavy use of `include`.
+
+### template.cache_maxsize
+
+This is an integer value used by the template engine's cache. It is set to a reasonable default, but you can increase/decrease it if you truly believe you're hitting issues.
+
+### template.clearcache
+
+	template.clearcache()
+
+Clears the template engine's cache, and calls Lua's garbage collector.
+
+---
+
 ## Building
 
 ### Dependencies
